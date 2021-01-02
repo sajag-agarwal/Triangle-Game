@@ -162,9 +162,9 @@ export default function App() {
   return (
     <div className="App">
       <h1 className="mainheading">
-        <img src="/Trianglegif.gif" alt="Triangle" />
+        <img src="/TriangleGIF.gif" alt="Triangle" />
         <span>Triangle Quiz</span>
-        <img src="/Trianglegif.gif" alt="Triangle" />
+        <img src="/TriangleGIF.gif" alt="Triangle" />
       </h1>
       {gameArr.map(function (game) {
         return (
