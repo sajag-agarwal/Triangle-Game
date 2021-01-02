@@ -4,7 +4,8 @@ var gameDict = {
   "Input the angles": [],
   "Guess the Angle": [],
   "Pythagorean Theorem": [],
-  "Area of Triangle": []
+  "Area of Triangle": [],
+  "Guess the Triangle": []
 };
 var gameArr = Object.keys(gameDict);
 
@@ -14,6 +15,14 @@ export default function App() {
     firstAngle: "",
     secondAngle: "",
     thirdAngle: ""
+  });
+  var [triangleState, setTriangleState] = useState({
+    firstAngle: 100,
+    secondAngle: 10,
+    thirdAngle: 70,
+    heading: "",
+    type: "Obtuse",
+    guessedAnswer: "Acute"
   });
   var [legState, setLegState] = useState({
     firstLeg: "",
@@ -31,7 +40,7 @@ export default function App() {
     firstAngle: 100,
     secondAngle: 50,
     thirdAngle: 30,
-    heading: "",
+    heading: "Enter the third angle value.",
     guessedAnswer: 0
   });
   function onClickHandler(game) {
@@ -97,6 +106,13 @@ export default function App() {
       [event.target.name]: value
     });
   }
+  function triangleStateHandler(event) {
+    const value = event.target.value;
+    setTriangleState({
+      ...triangleState,
+      guessedAnswer: value
+    });
+  }
   function AreaCalculator() {
     var areaval;
     var firstSide = Number(areaState.firstSide);
@@ -129,10 +145,27 @@ export default function App() {
       areaValue: areaval
     });
   }
+  function triangleCalculator() {
+    if (triangleState.guessedAnswer === triangleState.type) {
+      setTriangleState({
+        ...triangleState,
+        heading: "Your guess is correct!"
+      });
+    } else {
+      setTriangleState({
+        ...triangleState,
+        heading: "Sorry! Your guess is incorrect."
+      });
+    }
+  }
 
   return (
     <div className="App">
-      <h1>Triangle Quiz</h1>
+      <h1 className="mainheading">
+        <img src="/Trianglegif.gif" alt="Triangle" />
+        <span>Triangle Quiz</span>
+        <img src="/Trianglegif.gif" alt="Triangle" />
+      </h1>
       {gameArr.map(function (game) {
         return (
           <span key={game} onClick={() => onClickHandler(game)}>
@@ -145,7 +178,7 @@ export default function App() {
         <h2>Welcome! Currently you are playing {gameName}</h2>
       )}
       {gameName === "" && (
-        <h2>Welcome! Click the button of them game you want to play!!</h2>
+        <h2>Welcome! Click the button of the game you want to play!!</h2>
       )}
 
       {/* Input the angles */}
@@ -156,16 +189,19 @@ export default function App() {
               name="firstAngle"
               value={angleState.firstAngle}
               onChange={angleStateHandler}
+              placeholder={"Enter the Ist angle value"}
             />
             <input
               name="secondAngle"
               value={angleState.secondAngle}
               onChange={angleStateHandler}
+              placeholder={"Enter the IInd angle value"}
             />
             <input
               name="thirdAngle"
               value={angleState.thirdAngle}
               onChange={angleStateHandler}
+              placeholder={"Enter the IIIrd angle value"}
             />
           </div>
           {((angleState.firstAngle <= 0 ||
@@ -174,15 +210,21 @@ export default function App() {
             angleState.firstAngle >= 180 ||
             angleState.secondAngle >= 180 ||
             angleState.thirdAngle >= 180) && (
-            <h2>Please enter valid angles.</h2>
+            <h2 style={{ backgroundColor: "yellow" }}>
+              Please enter valid angles.
+            </h2>
           )) ||
             (Number(angleState.firstAngle) +
               Number(angleState.secondAngle) +
               Number(angleState.thirdAngle) ===
             180 ? (
-              <h2>Congratulations! These are valid angles for a triangle.</h2>
+              <h2 style={{ backgroundColor: "green" }}>
+                Congratulations! These are valid angles for a triangle.
+              </h2>
             ) : (
-              <h2>Sorry! The sum of these angles is not 180.</h2>
+              <h2 style={{ backgroundColor: "red" }}>
+                Sorry! The sum of these angles is not 180.
+              </h2>
             ))}
         </div>
       )}
@@ -203,7 +245,7 @@ export default function App() {
             />
           </div>
           <button onClick={HypoCalculator}>Click to find the hypotenuse</button>
-          <h1>{legState.hypotenuse}</h1>
+          <h1 className="hypo">{legState.hypotenuse}</h1>
         </div>
       )}
 
@@ -230,21 +272,39 @@ export default function App() {
             />
           </div>
           <button onClick={AreaCalculator}>Click to find the area</button>
-          <h1>{areaState.areaValue}</h1>
+          <h1 className="hypo">{areaState.areaValue}</h1>
         </div>
       )}
 
       {gameName === "Guess the Angle" && (
         <div>
-          <h2>
+          <h1>
             If two angles of a triangle are: {threeAnglesState.firstAngle} and{" "}
             {threeAnglesState.secondAngle}, guess the third angle
-          </h2>
+          </h1>
           <input onChange={threeanglesStateHandler} />
           <button onClick={thirdangleCalculator}>
             Click here to check your answer
           </button>
-          <h1>{threeAnglesState.heading}</h1>
+          <h2 style={{ backgroundColor: "red" }}>{threeAnglesState.heading}</h2>
+        </div>
+      )}
+      {gameName === "Guess the Triangle" && (
+        <div>
+          <h2>
+            If the three angle of a triangle are: {triangleState.firstAngle},{" "}
+            {triangleState.secondAngle} and {triangleState.thirdAngle}, guess
+            the type of the triangle
+          </h2>
+          <select onChange={triangleStateHandler}>
+            <option value="Acute">Acute</option>
+            <option value="Obtuse">Obtuse</option>
+            <option value="Right">Right Angled</option>
+          </select>
+          <button onClick={triangleCalculator}>
+            Click here to check your answer
+          </button>
+          <h1 className="hypo">{triangleState.heading}</h1>
         </div>
       )}
     </div>
